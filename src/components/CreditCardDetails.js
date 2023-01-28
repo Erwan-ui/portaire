@@ -10,7 +10,6 @@ import {
   updateExpirationDate,
   updateCCV,
 } from "../redux/user";
-import { toBeValid } from "@testing-library/jest-dom/dist/matchers";
 
 const CreditCardForm = ({ onInputChange }) => {
   const user = useSelector((state) => state.user);
@@ -41,8 +40,26 @@ const CreditCardForm = ({ onInputChange }) => {
     setCardNumberError(false);
   };
 
+  var validateLuhn = (function (arr) {
+    return function (ccNum) {
+      var len = ccNum.length,
+        bit = 1,
+        sum = 0,
+        val;
+
+      while (len) {
+        val = parseInt(ccNum.charAt(--len), 10);
+        sum += (bit ^= 1) ? arr[val] : val;
+      }
+
+      return sum && sum % 10 === 0;
+    };
+  })([0, 2, 4, 6, 8, 1, 3, 5, 7, 9]);
+
   const handleCardNumberBlur = (e) => {
-    let cardError = val.length < 16;
+    let cardError = val.length < 16 || !validateLuhn(val.replace(/\D/g, ""));
+    console.log("luhn", cardError);
+
     let dateError = date.length < 5;
     let ccvError = ccv.length < 3;
     console.log(cardError, dateError, ccvError);
