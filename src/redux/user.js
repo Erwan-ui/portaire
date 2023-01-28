@@ -12,6 +12,9 @@ const userSlice = createSlice({
     updateCardNumber: (state, action) => {
       state.currentUser.card_number = action.payload;
     },
+    updateCountry: (state, action) => {
+      state.currentUser.country = action.payload;
+    },
     updateCCV: (state, action) => {
       state.currentUser.ccv = action.payload;
     },
@@ -43,6 +46,7 @@ export const {
   updateCCV,
   updateExpirationDate,
   updateAddressTwo,
+  updateCountry,
   updateState,
   setUserData,
   updatePostCode,
