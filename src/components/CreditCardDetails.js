@@ -1,22 +1,36 @@
 import React, { useState } from "react";
 import card_logo from "../card_logo.svg";
 import InputMask from "react-input-mask";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  updateCardNumber,
+  updateExpirationDate,
+  updateCCV,
+} from "../redux/user";
 
 const CreditCardForm = ({ onInputChange }) => {
-  const { card_number } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [val, setVal] = useState("");
   const [date, setDate] = useState("");
+  const [ccv, setCcv] = useState("");
 
   const handleCardNumberChange = (e) => {
     setVal(e.target.value);
+    dispatch(updateCardNumber(e.target.value.replace(/\D/g, "")));
+    console.log("userado", user.currentUser);
   };
 
   const handleDateChange = (e) => {
     setDate(e.target.value);
+    dispatch(updateExpirationDate(e.target.value));
   };
 
-  const handleCCVChange = (e) => {};
+  const handleCCVChange = (e) => {
+    setCcv(e.target.value);
+    dispatch(updateCCV(e.target.value));
+  };
   return (
     <div className="credit-card-input">
       <div className="left-block">
@@ -61,6 +75,7 @@ const CreditCardForm = ({ onInputChange }) => {
           id="ccv"
           placeholder="CCV"
           maxLength={3}
+          value={ccv}
           onChange={handleCCVChange}
         ></input>
       </div>

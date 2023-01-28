@@ -9,6 +9,15 @@ const userSlice = createSlice({
     setUserData: (state, action) => {
       state.currentUser = action.payload;
     },
+    updateCardNumber: (state, action) => {
+      state.currentUser.card_number = action.payload;
+    },
+    updateCCV: (state, action) => {
+      state.currentUser.ccv = action.payload;
+    },
+    updateExpirationDate: (state, action) => {
+      state.currentUser.expiration_date = action.payload;
+    },
     updateAddressOne: (state, action) => {
       state.currentUser.address_one = action.payload;
     },
@@ -30,6 +39,9 @@ export const {
   updateFirstName,
   updateLastName,
   updateAddressOne,
+  updateCardNumber,
+  updateCCV,
+  updateExpirationDate,
   updateAddressTwo,
   updateState,
   setUserData,

@@ -8,52 +8,46 @@ import CreditCardForm from "./CreditCardDetails";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  updateId,
-  updateEmail,
-  updateFirstName,
-  updateLastName,
   updateAddressOne,
   updateAddressTwo,
   updateState,
   updatePostCode,
   setUserData,
-  updateV,
 } from "../redux/user";
 
 const UpdatePaymentForm = ({ onClick }) => {
   const user = useSelector((state) => state.user);
-  console.log("machin", user.currentUser);
   const dispatch = useDispatch();
 
   const [cardNumber, setCardNumber] = useState("");
   const [date, setDate] = useState("");
   const [ccv, setCcv] = useState("");
 
-  console.log("here", user.address_one);
   const handleInputChange = (field, value) => {
+    console.log(field);
     if (field === "ccv") {
       setCcv(value);
     }
 
-    // switch (field) {
-    //   case "cardNumber":
-    //     let cleanCardNumber = value.replace(/\D/g, "");
-    //     setCardNumber(cleanCardNumber);
-    //     console.log(cardNumber);
-    //     break;
-    //   case "date":
-    //     setDate(value);
-    //     console.log(date);
+    switch (field) {
+      case "cardNumber":
+        let cleanCardNumber = value.replace(/\D/g, "");
+        setCardNumber(cleanCardNumber);
+        console.log(cardNumber);
+        break;
+      case "date":
+        setDate(value);
+        console.log(date);
 
-    //     break;
-    //   case "ccv":
-    //     setCcv(value);
-    //     console.log(ccv);
+        break;
+      case "ccv":
+        setCcv(value);
+        console.log(ccv);
 
-    //     break;
-    //   default:
-    //     break;
-    // }
+        break;
+      default:
+        break;
+    }
   };
 
   const handleChange = (event) => {
