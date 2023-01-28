@@ -1,0 +1,106 @@
+.card-number-input::before {
+  content: "*";
+}
+
+.credit-card-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.credit-card-input input:focus {
+  border: none;
+  outline: none;
+  font-family: sans-serif;
+}
+
+.credit-card-input input {
+  border: none;
+}
+
+.card-number-input {
+  width: 150px;
+  height: 40px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.left-block {
+  display: flex;
+  align-items: center;
+  width: 200px;
+}
+
+.right-block {
+  display: flex;
+}
+
+.date-input,
+.ccv-input {
+  width: 50px;
+  cursor: pointer;
+}
+
+.ccv-input {
+  margin-left: 10px;
+}
+
+.card-number-input::placeholder {
+  font-family: sans serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 9px;
+}
+
+.date-input::placeholder {
+  font-family: sans serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 9px;
+}
+
+.ccv-input::placeholder {
+  font-family: sans serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 9px;
+}
+
+.icon {
+  width: 26px;
+  height: 17px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.invalid {
+  border-color: red;
+  color: red;
+}
+
+.mb-36 {
+  margin-bottom: 36px;
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.error-message {
+  background-color: red;
+  color: white;
+  font-family: "sans serif";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  width: 99%;
+}
