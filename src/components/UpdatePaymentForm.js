@@ -58,9 +58,30 @@ const UpdatePaymentForm = ({ onClick }) => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(user.currentUser);
+
+    try {
+      const response = await fetch(
+        "https://portaireapi.herokuapp.com/test/payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user: user.currentUser,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const data = [
