@@ -136,7 +136,6 @@
 
 .css-b62m3t-container {
   width: 100%;
-  margin-bottom: 36px;
   cursor: pointer;
   margin-top: 5px;
 }
@@ -163,4 +162,13 @@
 .logo-container {
   display: flex;
   justify-content: center;
+}
+
+.invalid {
+  border-color: red;
+  color: red;
+}
+
+.mb-36 {
+  margin-bottom: 36px;
 }

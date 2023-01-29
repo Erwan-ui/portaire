@@ -23,32 +23,41 @@ const UpdatePaymentForm = ({ onClick }) => {
   const [date, setDate] = useState("");
   const [ccv, setCcv] = useState("");
 
-  const handleInputChange = (field, value) => {
-    console.log(field);
-    if (field === "ccv") {
-      setCcv(value);
-    }
+  const [addressOneError, setAddressOneError] = useState(false);
+  const [addressTwoError, setAddressTwoError] = useState(false);
+  const [stateError, setStateError] = useState(false);
+  const [postCodeError, setPostCodeError] = useState(false);
 
-    switch (field) {
-      case "cardNumber":
-        let cleanCardNumber = value.replace(/\D/g, "");
-        setCardNumber(cleanCardNumber);
-        console.log(cardNumber);
-        break;
-      case "date":
-        setDate(value);
-        console.log(date);
+  const [triggerValidation, setTriggerValidation] = useState(false);
 
-        break;
-      case "ccv":
-        setCcv(value);
-        console.log(ccv);
+  // const handleInputChange = (field, value) => {
+  //   console.log("hello");
+  //   setTriggerValidation(false);
 
-        break;
-      default:
-        break;
-    }
-  };
+  //   if (field === "ccv") {
+  //     setCcv(value);
+  //   }
+
+  //   switch (field) {
+  //     case "cardNumber":
+  //       let cleanCardNumber = value.replace(/\D/g, "");
+  //       setCardNumber(cleanCardNumber);
+  //       console.log(cardNumber);
+  //       break;
+  //     case "date":
+  //       setDate(value);
+  //       console.log(date);
+
+  //       break;
+  //     case "ccv":
+  //       setCcv(value);
+  //       console.log(ccv);
+
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const handleChange = (event) => {
     if (event.target.name === "card_number") {
@@ -58,7 +67,29 @@ const UpdatePaymentForm = ({ onClick }) => {
     }
   };
 
+  const inputChanged = () => {
+    setTriggerValidation(false);
+  };
+
+  const validateFields = () => {
+    if (user.currentUser.address_one === "") {
+      setAddressOneError("Please enter an address");
+    }
+    if (user.currentUser.address_two === "") {
+      setAddressTwoError("Please enter an address");
+    }
+    if (user.currentUser.state === "") {
+      setStateError("Please enter a state");
+    }
+    if (user.currentUser.post_code === "") {
+      setPostCodeError("Please enter a post code");
+    }
+  };
+
   const handleSubmit = async (event) => {
+    validateFields();
+    setTriggerValidation(true);
+
     event.preventDefault();
 
     try {
@@ -130,12 +161,21 @@ const UpdatePaymentForm = ({ onClick }) => {
         <div className="form">
           <form onSubmit={handleSubmit}>
             <h3 className="title">Update your payment method</h3>
-            <CreditCardForm onInputChange={handleInputChange} />
-            <div className="input-container">
+            <CreditCardForm
+              triggerValidation={triggerValidation}
+              onInputChange={inputChanged}
+            />
+            <div
+              className={`input-container ${
+                addressOneError ? "invalid" : "mb-36"
+              }`}
+            >
               <div>
                 <label className="label">Address line 1</label>
                 <input
-                  className="custom-input"
+                  className={`custom-input ${
+                    addressOneError ? "invalid" : ""
+                  } `}
                   type="text"
                   onChange={(event) => {
                     dispatch(updateAddressOne(event.target.value));
@@ -146,11 +186,23 @@ const UpdatePaymentForm = ({ onClick }) => {
                 />
               </div>
             </div>
-            <div className="input-container">
+            {addressOneError && (
+              <div className="error-container">
+                <div className="error-message mb-36">{addressOneError}</div>
+              </div>
+            )}
+            <div
+              className={`input-container ${
+                addressTwoError ? "invalid" : "mb-36"
+              }`}
+            >
+              {" "}
               <div>
                 <label className="label">Address line 2</label>
                 <input
-                  className="custom-input"
+                  className={`custom-input ${
+                    addressTwoError ? "invalid" : ""
+                  } `}
                   type="text"
                   onChange={(event) => {
                     dispatch(updateAddressTwo(event.target.value));
@@ -161,38 +213,71 @@ const UpdatePaymentForm = ({ onClick }) => {
                 />
               </div>
             </div>
-
-            <CountrySelect></CountrySelect>
-            <div className="localisation-container">
-              <div className="input-container">
-                <div>
-                  <label className="label">State</label>
-                  <input
-                    className="custom-input"
-                    type="text"
-                    onChange={(event) => {
-                      dispatch(updateState(event.target.value));
-                    }}
-                    placeholder="e.g. Middlesex"
-                    defaultValue={user.currentUser.state}
-                    name={user.currentUser.state}
-                  />
-                </div>
+            {addressTwoError && (
+              <div className="error-container">
+                <div className="error-message mb-36">{addressTwoError}</div>
               </div>
-              <div className="input-container">
-                <div>
-                  <label className="label">Post Code</label>
-                  <input
-                    className="custom-input"
-                    type="text"
-                    onChange={(event) => {
-                      dispatch(updatePostCode(event.target.value));
-                    }}
-                    placeholder="e.g. W11 1NS"
-                    defaultValue={user.currentUser.post_code}
-                    name={user.currentUser.post_code}
-                  />
+            )}
+
+            <CountrySelect
+              triggerValidation={triggerValidation}
+            ></CountrySelect>
+            <div className="localisation-container">
+              <div className="blocktry">
+                <div
+                  className={`input-container ${
+                    stateError ? "invalid" : "mb-36"
+                  }`}
+                >
+                  {" "}
+                  <div>
+                    <label className="label">State</label>
+                    <input
+                      className={`custom-input ${stateError ? "invalid" : ""} `}
+                      type="text"
+                      onChange={(event) => {
+                        dispatch(updateState(event.target.value));
+                      }}
+                      placeholder="e.g. Middlesex"
+                      defaultValue={user.currentUser.state}
+                      name={user.currentUser.state}
+                    />
+                  </div>
                 </div>
+                {stateError && (
+                  <div className="error-container">
+                    <div className="error-message mb-36">{stateError}</div>
+                  </div>
+                )}
+              </div>
+              <div className="blocktry">
+                <div
+                  className={`input-container ${
+                    postCodeError ? "invalid" : "mb-36"
+                  }`}
+                >
+                  {" "}
+                  <div>
+                    <label className="label">Post Code</label>
+                    <input
+                      className={`custom-input ${
+                        postCodeError ? "invalid" : ""
+                      } `}
+                      type="text"
+                      onChange={(event) => {
+                        dispatch(updatePostCode(event.target.value));
+                      }}
+                      placeholder="e.g. W11 1NS"
+                      defaultValue={user.currentUser.post_code}
+                      name={user.currentUser.post_code}
+                    />
+                  </div>
+                </div>
+                {postCodeError && (
+                  <div className="error-container">
+                    <div className="error-message mb-36">{postCodeError}</div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="button-container">

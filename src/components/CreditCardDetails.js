@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import card_logo from "../card_logo.svg";
 import InputMask from "react-input-mask";
 import "../components/CreditCardDetails.css";
@@ -11,7 +11,7 @@ import {
   updateCCV,
 } from "../redux/user";
 
-const CreditCardForm = ({ onInputChange }) => {
+const CreditCardForm = ({ onInputChange, triggerValidation }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [val, setVal] = useState("");
@@ -20,10 +20,15 @@ const CreditCardForm = ({ onInputChange }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [cardNumberError, setCardNumberError] = useState(false);
 
+  useEffect(() => {
+    if (triggerValidation) {
+      validateCardField();
+    }
+  }, [triggerValidation]);
+
   const handleCardNumberChange = (e) => {
     setVal(e.target.value);
     dispatch(updateCardNumber(e.target.value.replace(/\D/g, "")));
-    console.log("userado", user.currentUser);
   };
 
   const handleDateChange = (e) => {
@@ -38,6 +43,7 @@ const CreditCardForm = ({ onInputChange }) => {
 
   const handleFocus = (e) => {
     setCardNumberError(false);
+    onInputChange();
   };
 
   var validateLuhn = (function (arr) {
@@ -56,26 +62,34 @@ const CreditCardForm = ({ onInputChange }) => {
     };
   })([0, 2, 4, 6, 8, 1, 3, 5, 7, 9]);
 
-  const handleCardNumberBlur = (e) => {
-    let cardError = val.length < 16 || !validateLuhn(val.replace(/\D/g, ""));
-    console.log("luhn", cardError);
-
-    let dateError = date.length < 5;
-    let ccvError = ccv.length < 3;
-    console.log(cardError, dateError, ccvError);
-    if (cardError) {
-      setCardNumberError(true);
-      setErrorMessage("Card Number Incorrect");
-    } else if (dateError) {
-      console.log(date.length);
-      setCardNumberError(true);
-      setErrorMessage("Expiration date incorrect");
-    } else if (ccvError) {
-      setCardNumberError(true);
-      setErrorMessage("CCV incorrect");
-    } else {
-      setCardNumberError(false);
+  const validateCardField = () => {
+    if (
+      val.replace(/\D/g, "").length > 0 ||
+      ccv.length > 0 ||
+      date.length > 0 ||
+      triggerValidation
+    ) {
+      let cardError = val.length < 16 || !validateLuhn(val.replace(/\D/g, ""));
+      let dateError = date.length < 5;
+      let ccvError = ccv.length < 3;
+      if (cardError) {
+        setCardNumberError(true);
+        setErrorMessage("Card Number Incorrect");
+      } else if (dateError) {
+        console.log(date.length);
+        setCardNumberError(true);
+        setErrorMessage("Expiration date incorrect");
+      } else if (ccvError) {
+        setCardNumberError(true);
+        setErrorMessage("CCV incorrect");
+      } else {
+        setCardNumberError(false);
+      }
     }
+  };
+
+  const handleCardNumberBlur = (e) => {
+    validateCardField();
   };
 
   return (
