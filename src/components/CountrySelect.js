@@ -13,19 +13,21 @@ const CountrySelect = ({ triggerValidation }) => {
   const user = useSelector((state) => state.user);
   const [countryError, setCountryError] = useState(false);
 
+  // Validate country field when triggerValidation is true
   useEffect(() => {
     if (triggerValidation) {
       validateCountryField();
     }
   }, [triggerValidation]);
 
+  // Check if user's country field is empty
   const validateCountryField = () => {
     if (!user.currentUser.country) {
       setCountryError(true);
-      console.log("whaouuu", user.currentUser.country);
     }
   };
 
+  // Custom styles for select component
   const borderStyle = {
     control: (base) => ({
       ...base,

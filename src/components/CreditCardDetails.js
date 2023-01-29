@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import card_logo from "../card_logo.svg";
+import card_logo from "../assets/card_logo.svg";
 import InputMask from "react-input-mask";
 import "../components/CreditCardDetails.css";
 
@@ -11,41 +11,50 @@ import {
   updateCCV,
 } from "../redux/user";
 
+// CreditCardForm component to display credit card form
 const CreditCardForm = ({ onInputChange, triggerValidation }) => {
+  // Select user from state
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  // State to store the values of card number, date and ccv
   const [val, setVal] = useState("");
   const [date, setDate] = useState("");
   const [ccv, setCcv] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [cardNumberError, setCardNumberError] = useState(false);
 
+  // Validate card number, date, and ccv on triggerValidation change
   useEffect(() => {
     if (triggerValidation) {
       validateCardField();
     }
   }, [triggerValidation]);
 
+  // Update card number in state on change
   const handleCardNumberChange = (e) => {
     setVal(e.target.value);
     dispatch(updateCardNumber(e.target.value.replace(/\D/g, "")));
   };
 
+  // Update date in state on change
   const handleDateChange = (e) => {
     setDate(e.target.value);
     dispatch(updateExpirationDate(e.target.value));
   };
 
+  // Update ccv in state on change
   const handleCCVChange = (e) => {
     setCcv(e.target.value);
     dispatch(updateCCV(e.target.value));
   };
 
+  // Remove card number error on input focus
   const handleFocus = (e) => {
     setCardNumberError(false);
     onInputChange();
   };
 
+  // Luhn algorithm for card number validation
   var validateLuhn = (function (arr) {
     return function (ccNum) {
       var len = ccNum.length,
@@ -62,6 +71,7 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
     };
   })([0, 2, 4, 6, 8, 1, 3, 5, 7, 9]);
 
+  // Validate card number, date, and ccv
   const validateCardField = () => {
     if (
       val.replace(/\D/g, "").length > 0 ||
@@ -76,7 +86,6 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
         setCardNumberError(true);
         setErrorMessage("Card Number Incorrect");
       } else if (dateError) {
-        console.log(date.length);
         setCardNumberError(true);
         setErrorMessage("Expiration date incorrect");
       } else if (ccvError) {

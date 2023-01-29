@@ -1,5 +1,5 @@
 import React from "react";
-import currency_logo from "../currency-logo.svg";
+import currency_logo from "../assets/currency-logo.svg";
 import "../components/Home.css";
 
 const Home = ({ onClick }) => {

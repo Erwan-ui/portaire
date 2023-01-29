@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../components/UpdatePaymentForm.css";
-import stripe_logo from "../stripe-logo.png";
+import stripe_logo from "../assets/stripe-logo.png";
 
-import CustomInput from "../components/CustomInput";
 import CountrySelect from "../components/CountrySelect";
 import CreditCardForm from "./CreditCardDetails";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,62 +14,27 @@ import {
   setUserData,
 } from "../redux/user";
 
+// Component that displays a form for updating payment information
 const UpdatePaymentForm = ({ onClick }) => {
+  // Get user data from the redux store
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const [cardNumber, setCardNumber] = useState("");
-  const [date, setDate] = useState("");
-  const [ccv, setCcv] = useState("");
-
+  // State to keep track of form field errors
   const [addressOneError, setAddressOneError] = useState(false);
   const [addressTwoError, setAddressTwoError] = useState(false);
+  const [formData, setFormData] = useState("");
   const [stateError, setStateError] = useState(false);
   const [postCodeError, setPostCodeError] = useState(false);
 
   const [triggerValidation, setTriggerValidation] = useState(false);
 
-  // const handleInputChange = (field, value) => {
-  //   console.log("hello");
-  //   setTriggerValidation(false);
-
-  //   if (field === "ccv") {
-  //     setCcv(value);
-  //   }
-
-  //   switch (field) {
-  //     case "cardNumber":
-  //       let cleanCardNumber = value.replace(/\D/g, "");
-  //       setCardNumber(cleanCardNumber);
-  //       console.log(cardNumber);
-  //       break;
-  //     case "date":
-  //       setDate(value);
-  //       console.log(date);
-
-  //       break;
-  //     case "ccv":
-  //       setCcv(value);
-  //       console.log(ccv);
-
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
-
-  const handleChange = (event) => {
-    if (event.target.name === "card_number") {
-      setCardNumber(event.target.value);
-    } else {
-      dispatch(updateAddressOne(event.target.value));
-    }
-  };
-
+  // Handle input change to reset errors
   const inputChanged = () => {
     setTriggerValidation(false);
   };
 
+  // Function to validate form fields
   const validateFields = () => {
     if (user.currentUser.address_one === "") {
       setAddressOneError("Please enter an address");
@@ -86,6 +50,7 @@ const UpdatePaymentForm = ({ onClick }) => {
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (event) => {
     validateFields();
     setTriggerValidation(true);
@@ -109,53 +74,30 @@ const UpdatePaymentForm = ({ onClick }) => {
         throw new Error(response.statusText);
       }
       const data = await response.json();
-      console.log(data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const data = [
-    {
-      _id: "63d2b0283c5c549fd2f97cb2",
-      email: "john@doe.com",
-      first_name: "Sherlock",
-      last_name: "Holmes",
-      address_one: "221b Baker St",
-      address_two: "London",
-      state: "London",
-      post_code: "NW1 6XE",
-      __v: 0,
-    },
-  ];
-
-  //   useEffect(() => {
-  //     fetch('https://portaireapi.herokuapp.com/test/payment')
-  //       .then(response => response.json())
-  //       .then(data => {
-  //           if(data.length > 1) {
-  //             const randomIndex = Math.floor(Math.random() * data.length);
-  //             setFormData(data[randomIndex]);
-  //           } else {
-  //             setFormData(data[0]);
-  //           }
-  //       })
-  //       .catch(error => console.log(error));
-  //   }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setFormData(data[0]);
-  //   }, 2000);
-  // }, []);
-
+  // Fetch user data and update the redux store on component mount
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(setUserData(data[0]));
-    }, 2000);
+    fetch("https://portaireapi.herokuapp.com/test/payment")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length > 1) {
+          const randomIndex = Math.floor(Math.random() * data.length);
+          setFormData(data[randomIndex]);
+          dispatch(setUserData(data[randomIndex]));
+        } else {
+          setFormData(data[0]);
+
+          dispatch(setUserData(data[0]));
+        }
+      })
+      .catch((error) => console.log(error));
   }, [dispatch]);
 
-  if (Object.keys(data[0]).length) {
+  if (Object.keys(formData).length) {
     return (
       <div className="container">
         <div className="form">
