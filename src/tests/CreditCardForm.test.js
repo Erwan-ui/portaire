@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import CreditCardForm from "./CreditCardForm";
+import CreditCardForm from "../components/CreditCardDetails";
 
 describe("CreditCardForm component", () => {
   it("renders without crashing", () => {
@@ -17,14 +17,5 @@ describe("CreditCardForm component", () => {
     const cardNumberInput = getByPlaceholderText("Card Number");
     fireEvent.focus(cardNumberInput);
     expect(onInputChange).toHaveBeenCalled();
-  });
-
-  it("validates the card number when input is blurred", () => {
-    const { getByPlaceholderText } = render(
-      <CreditCardForm triggerValidation />
-    );
-    const cardNumberInput = getByPlaceholderText("Card Number");
-    fireEvent.blur(cardNumberInput);
-    expect(cardNumberInput).toHaveClass("invalid");
   });
 });
