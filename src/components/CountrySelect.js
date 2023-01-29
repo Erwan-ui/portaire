@@ -5,7 +5,7 @@ import { options } from "../countries";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { updateCountry } from "../redux/user";
+import { updateCountry, updateValidationError } from "../redux/user";
 
 const CountrySelect = ({ triggerValidation }) => {
   const dispatch = useDispatch();
@@ -24,15 +24,21 @@ const CountrySelect = ({ triggerValidation }) => {
   const validateCountryField = () => {
     if (!user.currentUser.country) {
       setCountryError(true);
+      dispatch(updateValidationError(true));
     }
   };
 
   // Custom styles for select component
   const borderStyle = {
+    option: (styles, state) => ({
+      ...styles,
+      cursor: "pointer",
+    }),
     control: (base) => ({
       ...base,
       border: 0,
       boxShadow: "none",
+      cursor: "pointer",
     }),
   };
 
@@ -50,6 +56,7 @@ const CountrySelect = ({ triggerValidation }) => {
           onChange={(opt) => {
             dispatch(updateCountry(opt.value));
             setCountryError(false);
+            dispatch(updateValidationError(false));
           }}
           styles={borderStyle}
         >

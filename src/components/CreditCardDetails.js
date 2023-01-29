@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   updateCardNumber,
+  updateValidationError,
   updateExpirationDate,
   updateCCV,
 } from "../redux/user";
@@ -18,10 +19,13 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
   const dispatch = useDispatch();
   // State to store the values of card number, date and ccv
   const [val, setVal] = useState("");
+  const [maskedString, setMaskedString] = useState("");
+  const [test, setTest] = useState(false);
   const [date, setDate] = useState("");
   const [ccv, setCcv] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [cardNumberError, setCardNumberError] = useState(false);
+  const [ccvError, setCcvError] = useState(false);
 
   // Validate card number, date, and ccv on triggerValidation change
   useEffect(() => {
@@ -48,8 +52,13 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
     dispatch(updateCCV(e.target.value));
   };
 
+  const handleCcvFocus = (e) => {
+    setCcvError(false);
+  };
+
   // Remove card number error on input focus
   const handleFocus = (e) => {
+    console.log(cardNumberError);
     setCardNumberError(false);
     onInputChange();
   };
@@ -83,16 +92,28 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
       let dateError = date.length < 5;
       let ccvError = ccv.length < 3;
       if (cardError) {
+        setCcvError(true);
+
+        if (val.length === 19) {
+          setMaskedString("**** **** **** " + val.replace(/\D/g, "").slice(-4));
+        } else {
+          setMaskedString("**** **** **** ****");
+        }
         setCardNumberError(true);
         setErrorMessage("Card Number Incorrect");
+        dispatch(updateValidationError(true));
       } else if (dateError) {
         setCardNumberError(true);
         setErrorMessage("Expiration date incorrect");
+        dispatch(updateValidationError(true));
       } else if (ccvError) {
+        setCcvError(true);
         setCardNumberError(true);
         setErrorMessage("CCV incorrect");
+        dispatch(updateValidationError(true));
       } else {
         setCardNumberError(false);
+        dispatch(updateValidationError(false));
       }
     }
   };
@@ -108,24 +129,35 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
       >
         <div className="left-block">
           <img alt="card logo" className="icon" src={card_logo}></img>
-          <InputMask
-            className="card-number-input"
-            mask="9999 9999 9999 9999"
-            value={val}
-            onChange={handleCardNumberChange}
-            onBlur={handleCardNumberBlur}
-            onFocus={handleFocus}
-          >
-            {(inputProps) => (
-              <input
-                {...inputProps}
-                type="text"
-                placeholder="Card Number"
-                className="card-number-input"
-                maxLength={20}
-              />
-            )}
-          </InputMask>
+          {!cardNumberError && (
+            <InputMask
+              className="card-number-input"
+              mask="9999 9999 9999 9999"
+              value={val}
+              onChange={handleCardNumberChange}
+              onBlur={handleCardNumberBlur}
+              onFocus={handleFocus}
+            >
+              {(inputProps) => (
+                <input
+                  {...inputProps}
+                  type="text"
+                  placeholder="Card Number"
+                  className="card-number-input"
+                  maxLength={20}
+                />
+              )}
+            </InputMask>
+          )}
+          {cardNumberError && (
+            <InputMask
+              className="card-number-input"
+              mask="**** **** **** ****"
+              onFocus={handleFocus}
+              value={maskedString}
+              maskChar="*"
+            />
+          )}
         </div>
         <div className="right-block">
           <InputMask
@@ -144,17 +176,31 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
               />
             )}
           </InputMask>
-
-          <input
-            className="ccv-input"
-            type="text"
-            id="ccv"
-            placeholder="CCV"
-            onBlur={handleCardNumberBlur}
-            maxLength={3}
-            value={ccv}
-            onChange={handleCCVChange}
-          ></input>
+          {!ccvError && (
+            <input
+              className="ccv-input"
+              type="text"
+              id="ccv"
+              placeholder="CCV"
+              onBlur={handleCardNumberBlur}
+              maxLength={3}
+              value={ccv}
+              onChange={handleCCVChange}
+            ></input>
+          )}
+          {ccvError && (
+            <input
+              className="ccv-input"
+              type="text"
+              id="ccv"
+              placeholder="CCV"
+              onBlur={handleCardNumberBlur}
+              maxLength={3}
+              value="***"
+              onFocus={handleCcvFocus}
+              onChange={handleCCVChange}
+            ></input>
+          )}
         </div>
       </div>
       {cardNumberError && (

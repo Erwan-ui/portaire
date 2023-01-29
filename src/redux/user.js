@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { currentUser: {} };
+const initialState = { currentUser: {}, errors: { validationError: true } };
 
 const userSlice = createSlice({
   name: "user",
@@ -33,14 +33,13 @@ const userSlice = createSlice({
     updatePostCode: (state, action) => {
       state.currentUser.post_code = action.payload;
     },
+    updateValidationError: (state, action) => {
+      state.errors.validationError = action.payload;
+    },
   },
 });
 
 export const {
-  updateId,
-  updateEmail,
-  updateFirstName,
-  updateLastName,
   updateAddressOne,
   updateCardNumber,
   updateCCV,
@@ -50,7 +49,7 @@ export const {
   updateState,
   setUserData,
   updatePostCode,
-  updateV,
+  updateValidationError,
 } = userSlice.actions;
 
 export default userSlice.reducer;

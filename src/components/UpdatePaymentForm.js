@@ -56,26 +56,33 @@ const UpdatePaymentForm = ({ onClick }) => {
     setTriggerValidation(true);
 
     event.preventDefault();
-
-    try {
-      const response = await fetch(
-        "https://portaireapi.herokuapp.com/test/payment",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user: user.currentUser,
-          }),
+    if (
+      !addressOneError &&
+      !addressTwoError &&
+      !stateError &&
+      !postCodeError &&
+      !user.errors.validationError
+    ) {
+      try {
+        const response = await fetch(
+          "https://portaireapi.herokuapp.com/test/payment",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user: user.currentUser,
+            }),
+          }
+        );
+        if (!response.ok) {
+          throw new Error(response.statusText);
         }
-      );
-      if (!response.ok) {
-        throw new Error(response.statusText);
+        const data = await response.json();
+      } catch (error) {
+        console.error(error);
       }
-      const data = await response.json();
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -126,6 +133,9 @@ const UpdatePaymentForm = ({ onClick }) => {
                     dispatch(updateAddressOne(event.target.value));
                   }}
                   placeholder="e.g. 123 Fake St"
+                  onFocus={() => {
+                    setAddressOneError(false);
+                  }}
                   defaultValue={user.currentUser.address_one}
                   name={user.currentUser.address_one}
                   data-testid="address-one"
@@ -156,6 +166,9 @@ const UpdatePaymentForm = ({ onClick }) => {
                   placeholder="e.g. 123 Fake St"
                   defaultValue={user.currentUser.address_two}
                   name={user.currentUser.address_two}
+                  onFocus={() => {
+                    setAddressTwoError(false);
+                  }}
                   data-testid="address-two"
                 />
               </div>
@@ -170,64 +183,66 @@ const UpdatePaymentForm = ({ onClick }) => {
               triggerValidation={triggerValidation}
             ></CountrySelect>
             <div className="localisation-container">
-              <div className="blocktry">
-                <div
-                  className={`input-container ${
-                    stateError ? "invalid" : "mb-36"
-                  }`}
-                >
-                  {" "}
-                  <div>
-                    <label className="label">State</label>
-                    <input
-                      className={`custom-input ${stateError ? "invalid" : ""} `}
-                      type="text"
-                      onChange={(event) => {
-                        dispatch(updateState(event.target.value));
-                      }}
-                      placeholder="e.g. Middlesex"
-                      defaultValue={user.currentUser.state}
-                      name={user.currentUser.state}
-                      data-testid="state"
-                    />
-                  </div>
+              <div
+                className={`input-container ${
+                  stateError ? "invalid" : "mb-36"
+                }`}
+              >
+                {" "}
+                <div>
+                  <label className="label">State</label>
+                  <input
+                    className={`custom-input ${stateError ? "invalid" : ""} `}
+                    type="text"
+                    onChange={(event) => {
+                      dispatch(updateState(event.target.value));
+                    }}
+                    placeholder="e.g. Middlesex"
+                    defaultValue={user.currentUser.state}
+                    onFocus={() => {
+                      setStateError(false);
+                    }}
+                    name={user.currentUser.state}
+                    data-testid="state"
+                  />
                 </div>
-                {stateError && (
-                  <div className="error-container">
-                    <div className="error-message mb-36">{stateError}</div>
-                  </div>
-                )}
               </div>
-              <div className="blocktry">
-                <div
-                  className={`input-container ${
-                    postCodeError ? "invalid" : "mb-36"
-                  }`}
-                >
-                  {" "}
-                  <div>
-                    <label className="label">Post Code</label>
-                    <input
-                      className={`custom-input ${
-                        postCodeError ? "invalid" : ""
-                      } `}
-                      type="text"
-                      onChange={(event) => {
-                        dispatch(updatePostCode(event.target.value));
-                      }}
-                      placeholder="e.g. W11 1NS"
-                      defaultValue={user.currentUser.post_code}
-                      name={user.currentUser.post_code}
-                      data-testid="post-code"
-                    />
-                  </div>
+              {stateError && (
+                <div className="error-container">
+                  <div className="error-message mb-36">{stateError}</div>
                 </div>
-                {postCodeError && (
-                  <div className="error-container">
-                    <div className="error-message mb-36">{postCodeError}</div>
-                  </div>
-                )}
+              )}
+              <div
+                className={`input-container ${
+                  postCodeError ? "invalid" : "mb-36"
+                }`}
+              >
+                {" "}
+                <div>
+                  <label className="label">Post Code</label>
+                  <input
+                    className={`custom-input ${
+                      postCodeError ? "invalid" : ""
+                    } `}
+                    type="text"
+                    onChange={(event) => {
+                      dispatch(updatePostCode(event.target.value));
+                    }}
+                    placeholder="e.g. W11 1NS"
+                    onFocus={() => {
+                      setPostCodeError(false);
+                    }}
+                    defaultValue={user.currentUser.post_code}
+                    name={user.currentUser.post_code}
+                    data-testid="post-code"
+                  />
+                </div>
               </div>
+              {postCodeError && (
+                <div className="error-container">
+                  <div className="error-message mb-36">{postCodeError}</div>
+                </div>
+              )}
             </div>
             <div className="button-container">
               <button
