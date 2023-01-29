@@ -102,10 +102,13 @@ const UpdatePaymentForm = ({ onClick }) => {
       <div className="container">
         <div className="form">
           <form onSubmit={handleSubmit}>
-            <h3 className="title">Update your payment method</h3>
+            <h3 className="title" data-testid="title">
+              Update your payment method
+            </h3>
             <CreditCardForm
               triggerValidation={triggerValidation}
               onInputChange={inputChanged}
+              data-testid="credit-card-form"
             />
             <div
               className={`input-container ${
@@ -125,6 +128,7 @@ const UpdatePaymentForm = ({ onClick }) => {
                   placeholder="e.g. 123 Fake St"
                   defaultValue={user.currentUser.address_one}
                   name={user.currentUser.address_one}
+                  data-testid="address-one"
                 />
               </div>
             </div>
@@ -152,6 +156,7 @@ const UpdatePaymentForm = ({ onClick }) => {
                   placeholder="e.g. 123 Fake St"
                   defaultValue={user.currentUser.address_two}
                   name={user.currentUser.address_two}
+                  data-testid="address-two"
                 />
               </div>
             </div>
@@ -183,6 +188,7 @@ const UpdatePaymentForm = ({ onClick }) => {
                       placeholder="e.g. Middlesex"
                       defaultValue={user.currentUser.state}
                       name={user.currentUser.state}
+                      data-testid="state"
                     />
                   </div>
                 </div>
@@ -212,6 +218,7 @@ const UpdatePaymentForm = ({ onClick }) => {
                       placeholder="e.g. W11 1NS"
                       defaultValue={user.currentUser.post_code}
                       name={user.currentUser.post_code}
+                      data-testid="post-code"
                     />
                   </div>
                 </div>
@@ -223,14 +230,22 @@ const UpdatePaymentForm = ({ onClick }) => {
               </div>
             </div>
             <div className="button-container">
-              <button className="button" onClick={onClick}>
+              <button
+                className="button"
+                onClick={onClick}
+                data-testid="button-cancel"
+              >
                 Cancel
               </button>
-              <button className="button-black" type="submit">
+              <button
+                className="button-black"
+                type="submit"
+                data-testid="button-update"
+              >
                 Update
               </button>
             </div>
-            <div className="logo-container">
+            <div className="logo-container" data-testid="stripe-logo">
               <img alt="stripe-logo" src={stripe_logo}></img>
             </div>
           </form>
