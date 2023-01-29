@@ -32,6 +32,8 @@ Here are some things I would like to improve if I had more time to complete this
 
 - Use libraries to tidy up the code and avoid doing masks, calculations by myself.
 
+- I would also encourage the usage of translation files so that we have no text in our templates/component, but only references to the copy. This would enable us a lot of flexibility when scaling and thinking of reaching new countries/markets. I also prevents many errors, forgotten removals and testing.
+
 ### Feedback
 
 Thank you very much for this technical challenge, I really enjoyed being given some time to plan and think the implementation. I also like the fact that although the challenge seems pretty easy, there are always more layers of complexity/ sophistication that can be sought and found.
