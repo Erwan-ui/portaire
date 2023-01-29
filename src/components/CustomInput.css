@@ -3,9 +3,11 @@
   height: 40px;
   border-radius: 3px;
   border: 1px solid #d4d4d4;
-  margin-bottom: 36px;
   outline: none;
   text-indent: 15px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box;
 }
 
 .custom-input::placeholder {
@@ -27,4 +29,5 @@
 }
 
 .input-container {
+  width: 100%;
 }
