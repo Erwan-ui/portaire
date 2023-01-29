@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-cond-assign */
 import React, { useState, useEffect } from "react";
 import card_logo from "../assets/card_logo.svg";
 import InputMask from "react-input-mask";
 import "../components/CreditCardDetails.css";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   updateCardNumber,
@@ -14,13 +16,10 @@ import {
 
 // CreditCardForm component to display credit card form
 const CreditCardForm = ({ onInputChange, triggerValidation }) => {
-  // Select user from state
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   // State to store the values of card number, date and ccv
   const [val, setVal] = useState("");
   const [maskedString, setMaskedString] = useState("");
-  const [test, setTest] = useState(false);
   const [date, setDate] = useState("");
   const [ccv, setCcv] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -58,7 +57,6 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
 
   // Remove card number error on input focus
   const handleFocus = (e) => {
-    console.log(cardNumberError);
     setCardNumberError(false);
     onInputChange();
   };
@@ -179,7 +177,7 @@ const CreditCardForm = ({ onInputChange, triggerValidation }) => {
           {!ccvError && (
             <input
               className="ccv-input"
-              type="text"
+              type="number"
               id="ccv"
               placeholder="CCV"
               onBlur={handleCardNumberBlur}

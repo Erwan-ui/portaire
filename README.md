@@ -21,6 +21,8 @@ You will find below the validation rules I applied:
 
 - I have applied masks manually to the credit card input, which was challenging and fun.
 
+- I have used the react toastify library in order to display a success toast once the flow is finished and was successful.
+
 ### Improvement ideas
 
 Here are some things I would like to improve if I had more time to complete this.
@@ -43,3 +45,5 @@ Thank you very much for this technical challenge, I really enjoyed being given s
 In order to run the app you can clone the repo, run `npm install` and `npm start` in the console.
 
 In order to run the tests you can run `npm test` in the console.
+
+Here is a credit card number that passes the Luhn algorithm: 4417 1234 5678 9113.

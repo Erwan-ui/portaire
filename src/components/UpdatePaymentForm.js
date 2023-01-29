@@ -5,6 +5,8 @@ import stripe_logo from "../assets/stripe-logo.png";
 import CountrySelect from "../components/CountrySelect";
 import CreditCardForm from "./CreditCardDetails";
 import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   updateAddressOne,
@@ -50,6 +52,12 @@ const UpdatePaymentForm = ({ onClick }) => {
     }
   };
 
+  const showToastMessage = () => {
+    toast.success("Your payment information has been updated succesfully", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
   // Handle form submission
   const handleSubmit = async (event) => {
     validateFields();
@@ -57,11 +65,12 @@ const UpdatePaymentForm = ({ onClick }) => {
 
     event.preventDefault();
     if (
-      !addressOneError &&
-      !addressTwoError &&
-      !stateError &&
-      !postCodeError &&
-      !user.errors.validationError
+      !(user.currentUser.address_one === "") &&
+      !(user.currentUser.address_two === "") &&
+      !(user.currentUser.state === "") &&
+      !(user.currentUser.post_code === "") &&
+      !user.errors.validationError &&
+      !user.errors.countryValidationError
     ) {
       try {
         const response = await fetch(
@@ -79,10 +88,10 @@ const UpdatePaymentForm = ({ onClick }) => {
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-        const data = await response.json();
       } catch (error) {
         console.error(error);
       }
+      showToastMessage();
     }
   };
 
@@ -112,6 +121,9 @@ const UpdatePaymentForm = ({ onClick }) => {
             <h3 className="title" data-testid="title">
               Update your payment method
             </h3>
+            <div>
+              <ToastContainer />
+            </div>
             <CreditCardForm
               triggerValidation={triggerValidation}
               onInputChange={inputChanged}
@@ -183,66 +195,64 @@ const UpdatePaymentForm = ({ onClick }) => {
               triggerValidation={triggerValidation}
             ></CountrySelect>
             <div className="localisation-container">
+              <div className={`input-container ${stateError ? "" : "mb-36"}`}>
+                {" "}
+                <div>
+                  <div>
+                    <label className="label">State</label>
+                    <input
+                      className={`custom-input ${stateError ? "invalid" : ""} `}
+                      type="text"
+                      onChange={(event) => {
+                        dispatch(updateState(event.target.value));
+                      }}
+                      placeholder="e.g. Middlesex"
+                      defaultValue={user.currentUser.state}
+                      onFocus={() => {
+                        setStateError(false);
+                      }}
+                      name={user.currentUser.state}
+                      data-testid="state"
+                    />
+                  </div>
+                </div>
+                {stateError && (
+                  <div className="error-container">
+                    <div className="error-message mb-36">{stateError}</div>
+                  </div>
+                )}
+              </div>
               <div
-                className={`input-container ${
-                  stateError ? "invalid" : "mb-36"
-                }`}
+                className={`input-container ${postCodeError ? "" : "mb-36"}`}
               >
                 {" "}
                 <div>
-                  <label className="label">State</label>
-                  <input
-                    className={`custom-input ${stateError ? "invalid" : ""} `}
-                    type="text"
-                    onChange={(event) => {
-                      dispatch(updateState(event.target.value));
-                    }}
-                    placeholder="e.g. Middlesex"
-                    defaultValue={user.currentUser.state}
-                    onFocus={() => {
-                      setStateError(false);
-                    }}
-                    name={user.currentUser.state}
-                    data-testid="state"
-                  />
+                  <div>
+                    <label className="label">Post Code</label>
+                    <input
+                      className={`custom-input ${
+                        postCodeError ? "invalid" : ""
+                      } `}
+                      type="text"
+                      onChange={(event) => {
+                        dispatch(updatePostCode(event.target.value));
+                      }}
+                      placeholder="e.g. W11 1NS"
+                      onFocus={() => {
+                        setPostCodeError(false);
+                      }}
+                      defaultValue={user.currentUser.post_code}
+                      name={user.currentUser.post_code}
+                      data-testid="post-code"
+                    />
+                  </div>
                 </div>
+                {postCodeError && (
+                  <div className="error-container">
+                    <div className="error-message mb-36">{postCodeError}</div>
+                  </div>
+                )}
               </div>
-              {stateError && (
-                <div className="error-container">
-                  <div className="error-message mb-36">{stateError}</div>
-                </div>
-              )}
-              <div
-                className={`input-container ${
-                  postCodeError ? "invalid" : "mb-36"
-                }`}
-              >
-                {" "}
-                <div>
-                  <label className="label">Post Code</label>
-                  <input
-                    className={`custom-input ${
-                      postCodeError ? "invalid" : ""
-                    } `}
-                    type="text"
-                    onChange={(event) => {
-                      dispatch(updatePostCode(event.target.value));
-                    }}
-                    placeholder="e.g. W11 1NS"
-                    onFocus={() => {
-                      setPostCodeError(false);
-                    }}
-                    defaultValue={user.currentUser.post_code}
-                    name={user.currentUser.post_code}
-                    data-testid="post-code"
-                  />
-                </div>
-              </div>
-              {postCodeError && (
-                <div className="error-container">
-                  <div className="error-message mb-36">{postCodeError}</div>
-                </div>
-              )}
             </div>
             <div className="button-container">
               <button

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import "../components/CountrySelect.css";
@@ -5,7 +6,7 @@ import { options } from "../countries";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { updateCountry, updateValidationError } from "../redux/user";
+import { updateCountry, updateCountryValidationError } from "../redux/user";
 
 const CountrySelect = ({ triggerValidation }) => {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const CountrySelect = ({ triggerValidation }) => {
   const validateCountryField = () => {
     if (!user.currentUser.country) {
       setCountryError(true);
-      dispatch(updateValidationError(true));
+      dispatch(updateCountryValidationError(true));
     }
   };
 
@@ -39,6 +40,10 @@ const CountrySelect = ({ triggerValidation }) => {
       border: 0,
       boxShadow: "none",
       cursor: "pointer",
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      minHeight: 50,
     }),
   };
 
@@ -56,7 +61,7 @@ const CountrySelect = ({ triggerValidation }) => {
           onChange={(opt) => {
             dispatch(updateCountry(opt.value));
             setCountryError(false);
-            dispatch(updateValidationError(false));
+            dispatch(updateCountryValidationError(false));
           }}
           styles={borderStyle}
         >

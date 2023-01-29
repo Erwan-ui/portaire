@@ -13,7 +13,7 @@ const Home = ({ onClick }) => {
         <i className="home-logo">
           <img alt="currency logo" src={currency_logo}></img>
         </i>
-        <span>Update Payment Method</span>
+        <span>Update payment method</span>
       </button>
     </div>
   );
