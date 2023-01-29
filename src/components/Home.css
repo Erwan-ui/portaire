@@ -1,0 +1,25 @@
+.home-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-button {
+  font-family: "sans serif";
+  width: 181px;
+  height: 28px;
+  display: flex;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 8px;
+  align-items: center;
+  border-radius: 2px;
+  border: none;
+}
+
+.home-logo {
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+}
